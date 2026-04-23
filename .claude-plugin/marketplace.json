@@ -1,0 +1,24 @@
+{
+  "name": "skills",
+  "owner": {
+    "name": "Fabian Geistert"
+  },
+  "metadata": {
+    "description": "Agent skills for iOS development",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "add-string-texterify",
+      "source": "./",
+      "description": "Add a new localized string to an iOS project using Texterify",
+      "version": "1.0.0",
+      "keywords": ["ios", "localization", "texterify", "strings", "i18n"],
+      "category": "development",
+      "strict": false,
+      "skills": [
+        "./skills/add-string-texterify"
+      ]
+    }
+  ]
+}
