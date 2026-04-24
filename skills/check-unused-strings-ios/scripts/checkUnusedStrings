@@ -1,0 +1,50 @@
+#!/usr/bin/env python3
+"""Find unused localization keys in Strings.swift across all Swift source files."""
+import re
+import subprocess
+import sys
+from pathlib import Path
+
+project_root = Path(".")
+
+candidates = subprocess.run(
+    ["find", str(project_root), "-name", "Strings.swift",
+     "-not", "-path", "*/.build/*", "-not", "-path", "*/DerivedData/*"],
+    capture_output=True, text=True
+).stdout.strip().splitlines()
+
+if not candidates:
+    print("Error: no Strings.swift found in this project.", file=sys.stderr)
+    sys.exit(1)
+
+if len(candidates) > 1:
+    print(f"Found multiple Strings.swift files; using: {candidates[0]}", file=sys.stderr)
+
+strings_file = Path(candidates[0])
+
+defined = {}
+with open(strings_file) as f:
+    for line in f:
+        m = re.match(r'\s+public static (?:let|func) ([a-zA-Z][a-zA-Z0-9]*)', line)
+        if m:
+            defined[m.group(1)] = True
+
+result = subprocess.run(
+    ["grep", "-rh", r"Strings\.", str(project_root),
+     "--include=*.swift", "--exclude-dir=.build", f"--exclude={strings_file.name}"],
+    capture_output=True, text=True
+)
+
+used = set()
+for line in result.stdout.splitlines():
+    for m in re.finditer(r'Strings\.([a-zA-Z][a-zA-Z0-9]*)', line):
+        used.add(m.group(1))
+
+unused = sorted(set(defined) - used)
+
+if not unused:
+    print(f"All {len(defined)} strings are used.")
+else:
+    print(f"Found {len(unused)} unused string(s) out of {len(defined)}:\n")
+    for name in unused:
+        print(f"  Strings.{name}")
