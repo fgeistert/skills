@@ -24,6 +24,9 @@ npx skills add fgeistert/skills
 | Skill | What it covers |
 |-------|---------------|
 | [add-string-texterify](skills/add-string-texterify/) | Add a new localized string to an iOS project via the Texterify CLI |
+| [add-string-weblate](skills/add-string-weblate/) | Add a new localized string to an iOS project via the Weblate REST API |
+| [check-unused-strings-ios](skills/check-unused-strings-ios/) | Find localization keys in `Strings.swift` that are never referenced in Swift source files |
+| [translation-audit-ios](skills/translation-audit-ios/) | Audit iOS `.strings` files for bugs, grammar issues, and style problems — no external services required |
 
 ## Structure
 
